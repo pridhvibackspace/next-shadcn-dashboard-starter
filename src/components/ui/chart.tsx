@@ -5,6 +5,38 @@ import * as RechartsPrimitive from 'recharts';
 
 import { cn } from '@/lib/utils';
 
+// CSS color validation regex to prevent CSS injection attacks
+const CSS_COLOR_REGEX = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\(|^hsl\(/;
+
+function validateCSSColor(color: string): boolean {
+  if (!color || typeof color !== 'string') {
+    return false;
+  }
+  
+  // Check for basic CSS color patterns
+  if (CSS_COLOR_REGEX.test(color.trim())) {
+    return true;
+  }
+  
+  // Check for named CSS colors (basic validation)
+  const namedColors = [
+    'transparent', 'currentColor', 'inherit', 'initial', 'unset',
+    'black', 'white', 'red', 'green', 'blue', 'yellow', 'cyan', 'magenta',
+    'gray', 'grey', 'orange', 'purple', 'brown', 'pink', 'lime', 'navy',
+    'maroon', 'olive', 'teal', 'silver', 'aqua', 'fuchsia'
+  ];
+  
+  return namedColors.includes(color.trim().toLowerCase());
+}
+
+function sanitizeColor(color: string): string | null {
+  if (!validateCSSColor(color)) {
+    // Invalid CSS color detected and blocked - silently handle for security
+    return null;
+  }
+  return color;
+}
+
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
 
@@ -91,8 +123,12 @@ ${colorConfig
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color;
-    return color ? `  --color-${configKey}: ${color};` : null;
+    
+    // Validate and sanitize color before injecting into CSS
+    const sanitizedColor = color ? sanitizeColor(color) : null;
+    return sanitizedColor ? `  --color-${configKey}: ${sanitizedColor};` : null;
   })
+  .filter(Boolean)
   .join('\n')}
 }
 `
@@ -183,7 +219,8 @@ function ChartTooltipContent({
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
-          const indicatorColor = color || item.payload.fill || item.color;
+          const rawIndicatorColor = color || item.payload.fill || item.color;
+          const indicatorColor = rawIndicatorColor ? sanitizeColor(rawIndicatorColor) : null;
 
           return (
             <div
@@ -213,10 +250,10 @@ function ChartTooltipContent({
                           }
                         )}
                         style={
-                          {
+                          indicatorColor ? {
                             '--color-bg': indicatorColor,
                             '--color-border': indicatorColor
-                          } as React.CSSProperties
+                          } as React.CSSProperties : {}
                         }
                       />
                     )
@@ -279,6 +316,7 @@ function ChartLegendContent({
       {payload.map((item) => {
         const key = `${nameKey || item.dataKey || 'value'}`;
         const itemConfig = getPayloadConfigFromPayload(config, item, key);
+        const sanitizedBackgroundColor = item.color ? sanitizeColor(item.color) : null;
 
         return (
           <div
@@ -292,9 +330,11 @@ function ChartLegendContent({
             ) : (
               <div
                 className='h-2 w-2 shrink-0 rounded-[2px]'
-                style={{
-                  backgroundColor: item.color
-                }}
+                style={
+                  sanitizedBackgroundColor ? {
+                    backgroundColor: sanitizedBackgroundColor
+                  } : {}
+                }
               />
             )}
             {itemConfig?.label}
