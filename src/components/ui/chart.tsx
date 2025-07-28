@@ -70,6 +70,24 @@ function ChartContainer({
   );
 }
 
+// CSS color validation regex to prevent CSS injection attacks
+const CSS_COLOR_REGEX = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\(|^hsl\(/;
+
+// Validate CSS color to prevent injection
+function isValidCSSColor(color: string): boolean {
+  if (!color || typeof color !== 'string') {
+    return false;
+  }
+  
+  // Check for basic CSS color patterns
+  return CSS_COLOR_REGEX.test(color.trim()) || 
+         // Allow CSS custom properties and standard color names
+         /^var\(--[\w-]+\)$/.test(color.trim()) ||
+         /^(transparent|inherit|initial|unset|currentColor)$/.test(color.trim()) ||
+         // Allow standard CSS color names (basic set)
+         /^(red|blue|green|yellow|orange|purple|pink|brown|black|white|gray|grey)$/.test(color.trim());
+}
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color
@@ -91,8 +109,15 @@ ${colorConfig
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color;
-    return color ? `  --color-${configKey}: ${color};` : null;
+    
+    // Validate color before injecting to prevent CSS injection attacks
+    if (!color || !isValidCSSColor(color)) {
+      return null;
+    }
+    
+    return `  --color-${configKey}: ${color};`;
   })
+  .filter(Boolean)
   .join('\n')}
 }
 `
