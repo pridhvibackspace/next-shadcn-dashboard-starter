@@ -12,11 +12,48 @@ import {
 import { cn } from '@/lib/utils';
 import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons';
 
+/**
+ * Props for the DataTablePagination component
+ * 
+ * @template TData - The type of data displayed in the table
+ */
 interface DataTablePaginationProps<TData> extends React.ComponentProps<'div'> {
+  /** The TanStack Table instance containing pagination state and controls */
   table: Table<TData>;
+  /** Array of available page size options for the dropdown */
   pageSizeOptions?: number[];
 }
 
+/**
+ * Comprehensive pagination component for data tables
+ * 
+ * This component provides complete pagination controls including:
+ * - Row count information (total and selected)
+ * - Page size selector with customizable options
+ * - Current page indicator
+ * - Navigation buttons (first, previous, next, last)
+ * - Responsive design that adapts to screen size
+ * - Proper accessibility with ARIA labels
+ * 
+ * The component automatically syncs with the table's pagination state
+ * and provides intuitive controls for data navigation.
+ * 
+ * @template TData - The type of data displayed in the table
+ * @param props - Component props
+ * @param props.table - The TanStack Table instance
+ * @param props.pageSizeOptions - Available page sizes (defaults to [10, 20, 30, 40, 50])
+ * @param props.className - Additional CSS classes
+ * 
+ * @returns A complete pagination interface with controls and information
+ * 
+ * @example
+ * ```tsx
+ * <DataTablePagination 
+ *   table={table}
+ *   pageSizeOptions={[5, 10, 25, 50, 100]}
+ * />
+ * ```
+ */
 export function DataTablePagination<TData>({
   table,
   pageSizeOptions = [10, 20, 30, 40, 50],

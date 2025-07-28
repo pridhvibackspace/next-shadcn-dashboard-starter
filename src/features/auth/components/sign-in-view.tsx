@@ -11,6 +11,23 @@ export const metadata: Metadata = {
   description: 'Authentication forms built using the components.'
 };
 
+/**
+ * Sign-in page component that renders the authentication interface
+ * 
+ * This component provides a dual-pane layout with a promotional sidebar
+ * and the main sign-in form. It integrates with Clerk authentication
+ * and displays GitHub repository information with star count.
+ * 
+ * @param props - Component props
+ * @param props.stars - Number of GitHub stars to display for the repository
+ * 
+ * @returns The complete sign-in page with authentication form and promotional content
+ * 
+ * @example
+ * ```tsx
+ * <SignInViewPage stars={123} />
+ * ```
+ */
 export default function SignInViewPage({ stars }: { stars: number }) {
   return (
     <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>

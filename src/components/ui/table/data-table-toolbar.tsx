@@ -12,10 +12,44 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Cross2Icon } from '@radix-ui/react-icons';
 
+/**
+ * Props for the DataTableToolbar component
+ * 
+ * @template TData - The type of data displayed in the table
+ */
 interface DataTableToolbarProps<TData> extends React.ComponentProps<'div'> {
+  /** The TanStack Table instance for accessing column filters and state */
   table: Table<TData>;
 }
 
+/**
+ * Comprehensive toolbar component for data table filtering and controls
+ * 
+ * This component provides a complete filtering interface for data tables with:
+ * - Dynamic filter components based on column metadata
+ * - Support for text, number, date, range, and select filters
+ * - Reset filters functionality
+ * - Column visibility controls
+ * - Responsive layout with proper accessibility
+ * 
+ * The toolbar automatically generates appropriate filter controls based on
+ * column definitions and their metadata variants.
+ * 
+ * @template TData - The type of data displayed in the table
+ * @param props - Component props
+ * @param props.table - The TanStack Table instance
+ * @param props.children - Additional toolbar content
+ * @param props.className - Additional CSS classes
+ * 
+ * @returns A complete toolbar with filtering and view controls
+ * 
+ * @example
+ * ```tsx
+ * <DataTableToolbar table={table}>
+ *   <Button onClick={onExport}>Export</Button>
+ * </DataTableToolbar>
+ * ```
+ */
 export function DataTableToolbar<TData>({
   table,
   children,
@@ -67,10 +101,29 @@ export function DataTableToolbar<TData>({
     </div>
   );
 }
+/**
+ * Props for the DataTableToolbarFilter component
+ * 
+ * @template TData - The type of data in the table
+ */
 interface DataTableToolbarFilterProps<TData> {
+  /** The table column to render filter controls for */
   column: Column<TData>;
 }
 
+/**
+ * Internal component that renders appropriate filter controls based on column metadata
+ * 
+ * This component dynamically renders different filter types based on the column's
+ * metadata variant including text inputs, number inputs, date pickers, sliders,
+ * and select dropdowns.
+ * 
+ * @template TData - The type of data in the table
+ * @param props - Component props
+ * @param props.column - The table column instance
+ * 
+ * @returns The appropriate filter component for the column type
+ */
 function DataTableToolbarFilter<TData>({
   column
 }: DataTableToolbarFilterProps<TData>) {

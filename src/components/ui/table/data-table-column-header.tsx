@@ -18,12 +18,53 @@ import {
   Cross2Icon
 } from '@radix-ui/react-icons';
 
+/**
+ * Props for the DataTableColumnHeader component
+ * 
+ * @template TData - The type of data in the table row
+ * @template TValue - The type of value in this specific column
+ */
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.ComponentProps<typeof DropdownMenuTrigger> {
+  /** The TanStack Table column instance with sorting and visibility controls */
   column: Column<TData, TValue>;
+  /** The display title for the column header */
   title: string;
 }
 
+/**
+ * Interactive column header component for data tables
+ * 
+ * This component provides a clickable column header with dropdown menu
+ * containing sorting and visibility controls. Features include:
+ * - Visual sorting indicators (asc/desc/unsorted)
+ * - Sorting controls (ascending, descending, reset)
+ * - Column visibility toggle
+ * - Responsive design with proper accessibility
+ * 
+ * The component automatically adapts its functionality based on the
+ * column's capabilities (canSort, canHide) and current state.
+ * 
+ * @template TData - The type of data in the table row
+ * @template TValue - The type of value in this specific column
+ * @param props - Component props
+ * @param props.column - The TanStack Table column instance
+ * @param props.title - Display title for the column
+ * @param props.className - Additional CSS classes
+ * 
+ * @returns An interactive column header with sorting and visibility controls
+ * 
+ * @example
+ * ```tsx
+ * // In a column definition
+ * {
+ *   accessorKey: 'name',
+ *   header: ({ column }) => (
+ *     <DataTableColumnHeader column={column} title="Name" />
+ *   ),
+ * }
+ * ```
+ */
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
