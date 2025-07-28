@@ -8,6 +8,8 @@ import { matchSorter } from 'match-sorter'; // For filtering
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
+const MOCK_PRODUCTS_COUNT = 20;
+
 // Define the shape of Product data
 export type Product = {
   photo_url: string;
@@ -54,7 +56,7 @@ export const fakeProducts = {
     }
 
     // Generate remaining records
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= MOCK_PRODUCTS_COUNT; i++) {
       sampleProducts.push(generateRandomProductData(i));
     }
 
