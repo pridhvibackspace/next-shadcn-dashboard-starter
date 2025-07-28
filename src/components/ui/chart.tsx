@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils';
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
 
+const CHART_DEBOUNCE_TIMEOUT = 2000;
+
 export type ChartConfig = {
   [key in string]: {
     label?: React.ReactNode;
@@ -62,7 +64,9 @@ function ChartContainer({
       >
         <ChartStyle id={chartId} config={config} />
         {/* adding debounce will fix chart laggy behavior while animating */}
-        <RechartsPrimitive.ResponsiveContainer debounce={2000}>
+        <RechartsPrimitive.ResponsiveContainer
+          debounce={CHART_DEBOUNCE_TIMEOUT}
+        >
           {children}
         </RechartsPrimitive.ResponsiveContainer>
       </div>
