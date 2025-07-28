@@ -1,0 +1,1 @@
+export { AuthProfileView } from './AuthProfileView';

@@ -1,19 +1,2 @@
-import { useEffect, useState } from 'react';
-
-export function useMediaQuery() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    setIsOpen(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => {
-      setIsOpen(e.matches);
-    };
-
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  return { isOpen };
-}
+// This hook is deprecated. Use unified hooks from use-media-query-standard.ts
+export { useMobileNavigation as useMediaQuery } from './use-media-query-standard';

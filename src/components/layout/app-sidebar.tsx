@@ -31,7 +31,7 @@ import {
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { navItems } from '@/constants/data';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 import {
   IconBell,
   IconChevronRight,
@@ -41,9 +41,8 @@ import {
   IconPhotoUp,
   IconUserCircle
 } from '@tabler/icons-react';
-import { SignOutButton } from '@clerk/nextjs';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
@@ -62,8 +61,7 @@ const tenants = [
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  const { user } = useUser();
-  const router = useRouter();
+  const { user, actions, SignOutButton } = useAuth();
   const handleSwitchTenant = (_tenantId: string) => {
     // Tenant switching functionality would be implemented here
   };
@@ -182,9 +180,7 @@ export default function AppSidebar() {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onClick={() => router.push('/dashboard/profile')}
-                  >
+                  <DropdownMenuItem onClick={actions.navigateToProfile}>
                     <IconUserCircle className='mr-2 h-4 w-4' />
                     Profile
                   </DropdownMenuItem>

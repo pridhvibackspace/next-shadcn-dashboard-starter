@@ -1,7 +1,6 @@
-import Providers from '@/components/layout/providers';
+import { UnifiedProviders } from '@/features/theme/components/UnifiedProviders';
 import { Toaster } from '@/components/ui/sonner';
 import { fontVariables } from '@/lib/font';
-import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider';
 import { cn } from '@/lib/utils';
 import type { Metadata, Viewport } from 'next';
 import { cookies } from 'next/headers';
@@ -58,18 +57,10 @@ export default async function RootLayout({
       >
         <NextTopLoader showSpinner={false} />
         <NuqsAdapter>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-            enableColorScheme
-          >
-            <Providers activeThemeValue={activeThemeValue as string}>
-              <Toaster />
-              {children}
-            </Providers>
-          </ThemeProvider>
+          <UnifiedProviders activeThemeValue={activeThemeValue as string}>
+            <Toaster />
+            {children}
+          </UnifiedProviders>
         </NuqsAdapter>
       </body>
     </html>

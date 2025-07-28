@@ -3,17 +3,9 @@ import { v4 as uuid } from 'uuid';
 import { persist } from 'zustand/middleware';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { Column } from '../components/board-column';
+import { DEFAULT_COLUMNS, ColumnId } from '../constants';
 
 export type Status = 'TODO' | 'IN_PROGRESS' | 'DONE';
-
-const defaultCols = [
-  {
-    id: 'TODO' as const,
-    title: 'Todo'
-  }
-] satisfies Column[];
-
-export type ColumnId = (typeof defaultCols)[number]['id'];
 
 export type Task = {
   id: string;
@@ -56,7 +48,7 @@ export const useTaskStore = create<State & Actions>()(
   persist(
     (set) => ({
       tasks: initialTasks,
-      columns: defaultCols,
+      columns: DEFAULT_COLUMNS,
       draggedTask: null,
       addTask: (title: string, description?: string) =>
         set((state) => ({
