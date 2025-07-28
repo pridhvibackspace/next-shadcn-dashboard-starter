@@ -23,6 +23,7 @@ import NewSectionDialog from './new-section-dialog';
 import { TaskCard } from './task-card';
 // import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 
+/** Default column configuration for the kanban board */
 const defaultCols = [
   {
     id: 'TODO' as const,
@@ -38,8 +39,31 @@ const defaultCols = [
   }
 ] satisfies Column[];
 
+/** Type definition for valid column IDs */
 export type ColumnId = (typeof defaultCols)[number]['id'];
 
+/**
+ * Main kanban board component with drag-and-drop functionality
+ * 
+ * This component provides a complete kanban board implementation with:
+ * - Drag-and-drop support for both tasks and columns
+ * - Persistent state management using Zustand
+ * - Accessibility features with screen reader announcements
+ * - Mobile-friendly touch interactions
+ * - Real-time visual feedback during drag operations
+ * - Column reordering and task status updates
+ * 
+ * The board uses dnd-kit for drag-and-drop functionality and maintains
+ * state through a Zustand store with persistence. It supports both mouse
+ * and touch interactions for maximum compatibility.
+ * 
+ * @returns A fully interactive kanban board with drag-and-drop capabilities
+ * 
+ * @example
+ * ```tsx
+ * <KanbanBoard />
+ * ```
+ */
 export function KanbanBoard() {
   // const [columns, setColumns] = useState<Column[]>(defaultCols);
   const columns = useTaskStore((state) => state.columns);
@@ -74,6 +98,13 @@ export function KanbanBoard() {
   }, []);
   if (!isMounted) return;
 
+  /**
+   * Helper function to get task positioning data during drag operations
+   * 
+   * @param taskId - The unique identifier of the task being dragged
+   * @param columnId - The ID of the column containing the task
+   * @returns Object containing task position, column data, and related tasks
+   */
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
     const tasksInColumn = tasks.filter((task) => task.status === columnId);
     const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);

@@ -25,7 +25,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+/** Maximum allowed file size for image uploads (5MB) */
 const MAX_FILE_SIZE = 5000000;
+
+/** Accepted image MIME types for file uploads */
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
@@ -33,6 +36,7 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp'
 ];
 
+/** Zod schema for product form validation */
 const formSchema = z.object({
   image: z
     .any()
@@ -55,13 +59,53 @@ const formSchema = z.object({
   })
 });
 
+/**
+ * Props for the ProductForm component
+ */
+interface ProductFormProps {
+  /** Initial product data for editing, or null for creating new product */
+  initialData: Product | null;
+  /** Page title to display in the form header */
+  pageTitle: string;
+}
+
+/**
+ * Comprehensive product form component for creating and editing products
+ * 
+ * This component provides a complete form interface for product management with:
+ * - Image upload with validation for size and file type
+ * - Product name input with minimum length validation
+ * - Category selection with predefined options
+ * - Price input with decimal support
+ * - Description textarea with minimum length validation
+ * - Form validation using Zod schema
+ * - Responsive grid layout for optimal mobile experience
+ * 
+ * The form supports both create and edit modes based on the initialData prop.
+ * All form fields are validated on both client and server side.
+ * 
+ * @param props - Component props
+ * @param props.initialData - Existing product data for edit mode, null for create mode
+ * @param props.pageTitle - Title displayed in the form header
+ * 
+ * @returns A complete product form with validation and file upload
+ * 
+ * @example
+ * ```tsx
+ * // Create new product
+ * <ProductForm initialData={null} pageTitle="Add New Product" />
+ * 
+ * // Edit existing product
+ * <ProductForm 
+ *   initialData={existingProduct} 
+ *   pageTitle="Edit Product" 
+ * />
+ * ```
+ */
 export default function ProductForm({
   initialData,
   pageTitle
-}: {
-  initialData: Product | null;
-  pageTitle: string;
-}) {
+}: ProductFormProps) {
   const defaultValues = {
     name: initialData?.name || '',
     category: initialData?.category || '',
@@ -74,6 +118,11 @@ export default function ProductForm({
     values: defaultValues
   });
 
+  /**
+   * Handles form submission with validated data
+   * 
+   * @param values - Validated form data matching the schema
+   */
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Form submission logic would be implemented here
   }

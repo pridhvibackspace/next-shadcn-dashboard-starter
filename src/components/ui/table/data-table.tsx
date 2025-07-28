@@ -13,11 +13,56 @@ import {
 import { getCommonPinningStyles } from '@/lib/data-table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
+/**
+ * Props for the DataTable component
+ * 
+ * @template TData - The type of data displayed in each table row
+ */
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
+  /** The TanStack Table instance containing data, columns, and state */
   table: TanstackTable<TData>;
+  /** Optional action bar component displayed when rows are selected */
   actionBar?: React.ReactNode;
 }
 
+/**
+ * A comprehensive data table component built on top of TanStack Table
+ * 
+ * This component provides a full-featured data table with:
+ * - Scrollable content area with sticky headers
+ * - Column pinning support with proper styling
+ * - Integrated pagination controls
+ * - Optional action bar for selected rows
+ * - Responsive design with horizontal scrolling
+ * - Empty state handling
+ * 
+ * The table automatically handles rendering of headers, cells, and pagination
+ * based on the provided TanStack Table instance configuration.
+ * 
+ * @template TData - The type of data displayed in each table row
+ * @param props - Component props
+ * @param props.table - The TanStack Table instance
+ * @param props.actionBar - Optional action bar shown when rows are selected
+ * @param props.children - Additional content rendered above the table
+ * 
+ * @returns A complete data table with pagination and optional action bar
+ * 
+ * @example
+ * ```tsx
+ * const table = useReactTable({
+ *   data: users,
+ *   columns: userColumns,
+ *   // ... other table options
+ * });
+ * 
+ * <DataTable 
+ *   table={table}
+ *   actionBar={<BulkActionsBar />}
+ * >
+ *   <DataTableToolbar table={table} />
+ * </DataTable>
+ * ```
+ */
 export function DataTable<TData>({
   table,
   actionBar,

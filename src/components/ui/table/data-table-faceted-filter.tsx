@@ -25,13 +25,61 @@ import { cn } from '@/lib/utils';
 import * as React from 'react';
 import { CheckIcon } from '@radix-ui/react-icons';
 
+/**
+ * Props for the DataTableFacetedFilter component
+ * 
+ * @template TData - The type of data in the table row
+ * @template TValue - The type of value in the filtered column
+ */
 interface DataTableFacetedFilterProps<TData, TValue> {
+  /** The table column to apply filtering to */
   column?: Column<TData, TValue>;
+  /** Display title for the filter button */
   title?: string;
+  /** Array of available filter options with labels, values, and optional icons */
   options: Option[];
+  /** Whether to allow multiple selections (default: single selection) */
   multiple?: boolean;
 }
 
+/**
+ * Advanced faceted filter component for data table columns
+ * 
+ * This component provides a sophisticated filtering interface with:
+ * - Single or multiple selection modes
+ * - Search functionality within options
+ * - Visual indicators for selected items
+ * - Option counts and custom icons
+ * - Clear all functionality
+ * - Responsive badge display
+ * - Keyboard navigation support
+ * 
+ * The filter uses a popover with command palette for efficient option
+ * selection and provides clear visual feedback for active filters.
+ * 
+ * @template TData - The type of data in the table row
+ * @template TValue - The type of value in the filtered column
+ * @param props - Component props
+ * @param props.column - The table column to filter
+ * @param props.title - Display name for the filter
+ * @param props.options - Available filter options
+ * @param props.multiple - Enable multiple selections
+ * 
+ * @returns An interactive faceted filter with search and selection capabilities
+ * 
+ * @example
+ * ```tsx
+ * <DataTableFacetedFilter
+ *   column={table.getColumn('status')}
+ *   title="Status"
+ *   options={[
+ *     { label: 'Active', value: 'active', icon: CheckIcon },
+ *     { label: 'Inactive', value: 'inactive', count: 5 }
+ *   ]}
+ *   multiple={true}
+ * />
+ * ```
+ */
 export function DataTableFacetedFilter<TData, TValue>({
   column,
   title,

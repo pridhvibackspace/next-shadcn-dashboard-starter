@@ -11,6 +11,23 @@ export const metadata: Metadata = {
   description: 'Authentication forms built using the components.'
 };
 
+/**
+ * Sign-up page component that renders the user registration interface
+ * 
+ * This component provides a dual-pane layout with a promotional sidebar
+ * and the main sign-up form. It integrates with Clerk authentication
+ * and displays GitHub repository information with star count.
+ * 
+ * @param props - Component props
+ * @param props.stars - Number of GitHub stars to display for the repository
+ * 
+ * @returns The complete sign-up page with registration form and promotional content
+ * 
+ * @example
+ * ```tsx
+ * <SignUpViewPage stars={456} />
+ * ```
+ */
 export default function SignUpViewPage({ stars }: { stars: number }) {
   return (
     <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
