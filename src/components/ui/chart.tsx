@@ -70,6 +70,54 @@ function ChartContainer({
   );
 }
 
+// CSS color validation regex to prevent CSS injection attacks
+const isValidCSSColor = (color: string): boolean => {
+  if (!color || typeof color !== 'string') return false;
+
+  // Allow hex colors (#fff, #ffffff)
+  const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
+  // Allow rgb/rgba colors (rgb(255,255,255), rgba(255,255,255,0.5))
+  const rgbColorRegex =
+    /^rgba?\(\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*(?:,\s*(0?\.?\d+|1(?:\.0+)?))?\s*\)$/;
+
+  // Allow hsl/hsla colors (hsl(360,100%,50%), hsla(360,100%,50%,0.5))
+  const hslColorRegex =
+    /^hsla?\(\s*(\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)%\s*,\s*(\d+(?:\.\d+)?)%\s*(?:,\s*(0?\.?\d+|1(?:\.0+)?))?\s*\)$/;
+
+  // Allow CSS named colors (basic set)
+  const namedColors = [
+    'transparent',
+    'currentColor',
+    'inherit',
+    'initial',
+    'unset',
+    'black',
+    'silver',
+    'gray',
+    'white',
+    'maroon',
+    'red',
+    'purple',
+    'fuchsia',
+    'green',
+    'lime',
+    'olive',
+    'yellow',
+    'navy',
+    'blue',
+    'teal',
+    'aqua'
+  ];
+
+  return (
+    hexColorRegex.test(color) ||
+    rgbColorRegex.test(color) ||
+    hslColorRegex.test(color) ||
+    namedColors.includes(color.toLowerCase())
+  );
+};
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color
@@ -91,8 +139,15 @@ ${colorConfig
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color;
-    return color ? `  --color-${configKey}: ${color};` : null;
+
+    // Validate color to prevent CSS injection
+    if (!color || !isValidCSSColor(color)) {
+      return null;
+    }
+
+    return `  --color-${configKey}: ${color};`;
   })
+  .filter(Boolean)
   .join('\n')}
 }
 `
