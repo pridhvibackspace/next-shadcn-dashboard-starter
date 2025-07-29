@@ -30,7 +30,10 @@ export function KanbanBoard() {
   const tasks = useTaskStore((state) => state.tasks);
   const [isMounted, setIsMounted] = useState<Boolean>(false);
 
-  const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+  const columnsId = useMemo(
+    () => columns.map((col) => col.id as string),
+    [columns]
+  );
 
   const {
     sensors,
