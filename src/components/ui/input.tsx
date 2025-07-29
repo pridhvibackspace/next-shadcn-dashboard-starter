@@ -2,6 +2,45 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
+/**
+ * Input component with consistent styling and accessibility features
+ * 
+ * Features:
+ * - Consistent styling across the application
+ * - Focus states with ring indicators
+ * - Form validation state styling (error states)
+ * - Dark mode support
+ * - File input styling
+ * - Disabled state handling
+ * - Placeholder text styling
+ * - Selection styling
+ * - Responsive text sizing
+ * 
+ * @param props - Standard HTML input props
+ * @param props.className - Additional CSS classes to apply
+ * @param props.type - Input type (text, email, password, file, etc.)
+ * @param props...props - All other HTML input attributes
+ * @returns JSX element representing a styled input field
+ * 
+ * @example
+ * ```tsx
+ * // Basic text input
+ * <Input type="text" placeholder="Enter your name" />
+ * 
+ * // Email input with custom styling
+ * <Input 
+ *   type="email" 
+ *   placeholder="Enter email" 
+ *   className="w-full" 
+ * />
+ * 
+ * // File input
+ * <Input type="file" accept="image/*" />
+ * 
+ * // Disabled input
+ * <Input type="text" disabled value="Read-only value" />
+ * ```
+ */
 function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
   return (
     <input

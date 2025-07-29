@@ -23,6 +23,10 @@ import NewSectionDialog from './new-section-dialog';
 import { TaskCard } from './task-card';
 // import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 
+/**
+ * Default column configuration for the Kanban board
+ * Defines the initial three-column layout with TODO, IN_PROGRESS, and DONE states
+ */
 const defaultCols = [
   {
     id: 'TODO' as const,
@@ -38,8 +42,37 @@ const defaultCols = [
   }
 ] satisfies Column[];
 
+/**
+ * Type definition for valid column IDs
+ * Extracted from the defaultCols array to ensure type safety
+ */
 export type ColumnId = (typeof defaultCols)[number]['id'];
 
+/**
+ * Main Kanban board component with drag-and-drop functionality
+ * 
+ * Features:
+ * - Drag and drop tasks between columns
+ * - Drag and drop to reorder columns
+ * - Real-time state management with Zustand store
+ * - Accessibility announcements for screen readers
+ * - Touch and mouse sensor support
+ * - Persistent state with localStorage
+ * - Portal-based drag overlays for smooth UX
+ * - Dynamic column creation and management
+ * 
+ * @returns JSX element representing the complete Kanban board interface
+ * 
+ * @example
+ * ```tsx
+ * <KanbanBoard />
+ * ```
+ * 
+ * @remarks
+ * This component uses @dnd-kit for drag and drop functionality and manages
+ * state through a Zustand store. The board automatically persists changes
+ * to localStorage and rehydrates on component mount.
+ */
 export function KanbanBoard() {
   // const [columns, setColumns] = useState<Column[]>(defaultCols);
   const columns = useTaskStore((state) => state.columns);
@@ -74,6 +107,13 @@ export function KanbanBoard() {
   }, []);
   if (!isMounted) return;
 
+  /**
+   * Helper function to get task data during drag operations
+   * 
+   * @param taskId - The unique identifier of the task being dragged
+   * @param columnId - The ID of the column containing the task
+   * @returns Object containing task position and column information
+   */
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
     const tasksInColumn = tasks.filter((task) => task.status === columnId);
     const taskPosition = tasksInColumn.findIndex((task) => task.id === taskId);
@@ -224,6 +264,12 @@ export function KanbanBoard() {
     </DndContext>
   );
 
+  /**
+   * Handles the start of a drag operation
+   * Sets the appropriate active item (column or task) for the drag overlay
+   * 
+   * @param event - The drag start event from dnd-kit
+   */
   function onDragStart(event: DragStartEvent) {
     if (!hasDraggableData(event.active)) return;
     const data = event.active.data.current;
@@ -238,6 +284,12 @@ export function KanbanBoard() {
     }
   }
 
+  /**
+   * Handles the end of a drag operation
+   * Reorders columns when a column is dropped on another column
+   * 
+   * @param event - The drag end event from dnd-kit
+   */
   function onDragEnd(event: DragEndEvent) {
     setActiveColumn(null);
     setActiveTask(null);
@@ -264,6 +316,12 @@ export function KanbanBoard() {
     setColumns(arrayMove(columns, activeColumnIndex, overColumnIndex));
   }
 
+  /**
+   * Handles drag over events during drag operations
+   * Manages task movement between columns and task reordering within columns
+   * 
+   * @param event - The drag over event from dnd-kit
+   */
   function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
     if (!over) return;

@@ -6,12 +6,43 @@ import { IconStar } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+/**
+ * Metadata configuration for the sign-up page
+ * Defines the page title and description for SEO and browser display
+ */
 export const metadata: Metadata = {
   title: 'Authentication',
   description: 'Authentication forms built using the components.'
 };
 
-export default function SignUpViewPage({ stars }: { stars: number }) {
+/**
+ * Props for the SignUpViewPage component
+ */
+interface SignUpViewPageProps {
+  /** The number of GitHub stars to display for the repository */
+  stars: number;
+}
+
+/**
+ * Sign-up page component that displays the user registration form with branding
+ * 
+ * Features:
+ * - Two-column layout with branding section and sign-up form
+ * - GitHub repository link with star count display
+ * - Integrated Clerk authentication form for user registration
+ * - Responsive design that adapts to different screen sizes
+ * - Terms of service and privacy policy links
+ * 
+ * @param props - Component props
+ * @param props.stars - Number of GitHub stars to display
+ * @returns JSX element representing the complete sign-up page
+ * 
+ * @example
+ * ```tsx
+ * <SignUpViewPage stars={1250} />
+ * ```
+ */
+export default function SignUpViewPage({ stars }: SignUpViewPageProps) {
   return (
     <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <Link
