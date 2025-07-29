@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as RechartsPrimitive from 'recharts';
 
 import { cn } from '@/lib/utils';
+import { CHART_DEBOUNCE_DELAY } from '@/constants/ui';
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: '', dark: '.dark' } as const;
@@ -62,7 +63,7 @@ function ChartContainer({
       >
         <ChartStyle id={chartId} config={config} />
         {/* adding debounce will fix chart laggy behavior while animating */}
-        <RechartsPrimitive.ResponsiveContainer debounce={2000}>
+        <RechartsPrimitive.ResponsiveContainer debounce={CHART_DEBOUNCE_DELAY}>
           {children}
         </RechartsPrimitive.ResponsiveContainer>
       </div>
