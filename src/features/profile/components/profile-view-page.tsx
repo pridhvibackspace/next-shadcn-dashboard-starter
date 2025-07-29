@@ -1,4 +1,4 @@
-import { UserProfile } from '@clerk/nextjs';
+import { UserProfile } from '@/features/auth/hooks/useAuth';
 
 export default function ProfileViewPage() {
   return (
