@@ -7,8 +7,6 @@ import {
   SignUp as ClerkSignUp,
   UserProfile as ClerkUserProfile
 } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import type { User } from '@clerk/nextjs/server';
 
 // Authentication user interface to abstract from Clerk-specific types
 export interface AuthUser {
@@ -51,12 +49,6 @@ export function useAuth(): AuthContext {
     isLoaded,
     isSignedIn: !!isSignedIn
   };
-}
-
-// Server-side authentication function
-export async function getServerAuth(): Promise<{ userId: string | null }> {
-  const { userId } = auth();
-  return { userId };
 }
 
 // Authentication component abstractions
