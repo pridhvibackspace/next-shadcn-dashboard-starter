@@ -16,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
+import { BarGraphSkeleton } from '@/components/bar-graph-skeleton';
 
 export const description = 'An interactive bar chart';
 
@@ -156,7 +157,7 @@ export function BarGraph() {
   }, [activeChart]);
 
   if (!isClient) {
-    return null;
+    return <BarGraphSkeleton />;
   }
 
   return (

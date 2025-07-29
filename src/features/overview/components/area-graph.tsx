@@ -17,6 +17,11 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
+import {
+  ChartErrorBoundary,
+  ChartEmptyState
+} from '@/components/chart-error-boundary';
+import { useMemo } from 'react';
 
 const chartData = [
   { month: 'January', desktop: 186, mobile: 80 },
@@ -41,7 +46,30 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
-export function AreaGraph() {
+function AreaGraphContent() {
+  // Simulate empty data state occasionally
+  const hasData = useMemo(() => {
+    return chartData && chartData.length > 0;
+  }, []);
+
+  // Simulate error state occasionally
+  const shouldError = useMemo(() => {
+    return Math.random() > 0.95; // 5% chance of error for demo
+  }, []);
+
+  if (shouldError) {
+    throw new Error('Failed to load area chart data from API');
+  }
+
+  if (!hasData) {
+    return (
+      <ChartEmptyState
+        title='No Visitor Data'
+        description='Visitor data will appear here once tracking begins.'
+      />
+    );
+  }
+
   return (
     <Card className='@container/card'>
       <CardHeader>
@@ -132,5 +160,13 @@ export function AreaGraph() {
         </div>
       </CardFooter>
     </Card>
+  );
+}
+
+export function AreaGraph() {
+  return (
+    <ChartErrorBoundary title='Area Chart Error'>
+      <AreaGraphContent />
+    </ChartErrorBoundary>
   );
 }

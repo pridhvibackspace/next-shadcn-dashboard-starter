@@ -23,6 +23,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Product } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useTransition, useState } from 'react';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 const MAX_FILE_SIZE = 5000000;
@@ -62,6 +64,9 @@ export default function ProductForm({
   initialData: Product | null;
   pageTitle: string;
 }) {
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+
   const defaultValues = {
     name: initialData?.name || '',
     category: initialData?.category || '',
@@ -75,7 +80,38 @@ export default function ProductForm({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Form submission logic would be implemented here
+    setError(null);
+
+    startTransition(async () => {
+      try {
+        // Simulate API call
+        console.log('Submitting product:', values);
+
+        // Add artificial delay to show loading state
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Simulate potential error
+        if (Math.random() > 0.7) {
+          throw new Error('Failed to save product. Please try again.');
+        }
+
+        toast.success(
+          initialData
+            ? 'Product updated successfully!'
+            : 'Product created successfully!'
+        );
+
+        // Reset form on successful creation
+        if (!initialData) {
+          form.reset();
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'An unexpected error occurred';
+        setError(errorMessage);
+        toast.error(errorMessage);
+      }
+    });
   }
 
   return (
@@ -122,7 +158,11 @@ export default function ProductForm({
                   <FormItem>
                     <FormLabel>Product Name</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter product name' {...field} />
+                      <Input
+                        placeholder='Enter product name'
+                        disabled={isPending}
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,7 +176,8 @@ export default function ProductForm({
                     <FormLabel>Category</FormLabel>
                     <Select
                       onValueChange={(value) => field.onChange(value)}
-                      value={field.value[field.value.length - 1]}
+                      value={field.value}
+                      disabled={isPending}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -168,7 +209,11 @@ export default function ProductForm({
                         type='number'
                         step='0.01'
                         placeholder='Enter price'
+                        disabled={isPending}
                         {...field}
+                        onChange={(e) =>
+                          field.onChange(parseFloat(e.target.value) || 0)
+                        }
                       />
                     </FormControl>
                     <FormMessage />
@@ -186,6 +231,7 @@ export default function ProductForm({
                     <Textarea
                       placeholder='Enter product description'
                       className='resize-none'
+                      disabled={isPending}
                       {...field}
                     />
                   </FormControl>
@@ -193,7 +239,23 @@ export default function ProductForm({
                 </FormItem>
               )}
             />
-            <Button type='submit'>Add Product</Button>
+            {error && (
+              <div className='bg-destructive/15 text-destructive rounded-md p-3 text-sm'>
+                {error}
+              </div>
+            )}
+            <Button type='submit' disabled={isPending}>
+              {isPending ? (
+                <>
+                  <div className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent' />
+                  {initialData ? 'Updating...' : 'Creating...'}
+                </>
+              ) : initialData ? (
+                'Update Product'
+              ) : (
+                'Add Product'
+              )}
+            </Button>
           </form>
         </Form>
       </CardContent>

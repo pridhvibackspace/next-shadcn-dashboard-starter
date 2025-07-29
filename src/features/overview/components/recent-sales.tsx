@@ -6,6 +6,11 @@ import {
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
+import {
+  ChartErrorBoundary,
+  ChartEmptyState
+} from '@/components/chart-error-boundary';
+import { useMemo } from 'react';
 
 const salesData = [
   {
@@ -45,7 +50,30 @@ const salesData = [
   }
 ];
 
-export function RecentSales() {
+function RecentSalesContent() {
+  // Simulate empty data state
+  const hasData = useMemo(() => {
+    return salesData && salesData.length > 0;
+  }, []);
+
+  // Simulate error state occasionally
+  const shouldError = useMemo(() => {
+    return Math.random() > 0.95; // 5% chance of error for demo
+  }, []);
+
+  if (shouldError) {
+    throw new Error('Failed to load recent sales data');
+  }
+
+  if (!hasData) {
+    return (
+      <ChartEmptyState
+        title='No Recent Sales'
+        description='Recent sales will appear here once transactions are made.'
+      />
+    );
+  }
+
   return (
     <Card className='h-full'>
       <CardHeader>
@@ -70,5 +98,13 @@ export function RecentSales() {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+export function RecentSales() {
+  return (
+    <ChartErrorBoundary title='Recent Sales Error'>
+      <RecentSalesContent />
+    </ChartErrorBoundary>
   );
 }

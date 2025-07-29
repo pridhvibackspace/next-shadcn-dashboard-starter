@@ -4,7 +4,19 @@ import { NextRequest } from 'next/server';
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
-  if (isProtectedRoute(req)) await auth.protect();
+  if (isProtectedRoute(req)) {
+    try {
+      await auth.protect();
+    } catch (error) {
+      console.error('Authentication error in middleware:', error);
+
+      // Redirect to sign-in page with callback URL
+      const signInUrl = new URL('/auth/sign-in', req.url);
+      signInUrl.searchParams.set('callbackUrl', req.url);
+
+      return Response.redirect(signInUrl);
+    }
+  }
 });
 export const config = {
   matcher: [

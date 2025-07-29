@@ -18,6 +18,10 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from '@/components/ui/chart';
+import {
+  ChartErrorBoundary,
+  ChartEmptyState
+} from '@/components/chart-error-boundary';
 
 const chartData = [
   { browser: 'chrome', visitors: 275, fill: 'var(--primary)' },
@@ -53,10 +57,33 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
-export function PieGraph() {
+function PieGraphContent() {
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
   }, []);
+
+  // Simulate empty data state
+  const hasData = React.useMemo(() => {
+    return chartData && chartData.length > 0 && totalVisitors > 0;
+  }, [totalVisitors]);
+
+  // Simulate error state occasionally
+  const shouldError = React.useMemo(() => {
+    return Math.random() > 0.95; // 5% chance of error for demo
+  }, []);
+
+  if (shouldError) {
+    throw new Error('Failed to load browser usage statistics');
+  }
+
+  if (!hasData) {
+    return (
+      <ChartEmptyState
+        title='No Browser Data'
+        description='Browser usage statistics will appear here once users start visiting.'
+      />
+    );
+  }
 
   return (
     <Card className='@container/card'>
@@ -159,5 +186,13 @@ export function PieGraph() {
         </div>
       </CardFooter>
     </Card>
+  );
+}
+
+export function PieGraph() {
+  return (
+    <ChartErrorBoundary title='Pie Chart Error'>
+      <PieGraphContent />
+    </ChartErrorBoundary>
   );
 }
