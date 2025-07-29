@@ -21,6 +21,7 @@ import type { Column } from './board-column';
 import { BoardColumn, BoardContainer } from './board-column';
 import NewSectionDialog from './new-section-dialog';
 import { TaskCard } from './task-card';
+import { KanbanBoardSkeleton } from '@/components/kanban-skeleton';
 // import { coordinateGetter } from "./multipleContainersKeyboardPreset";
 
 const defaultCols = [
@@ -72,7 +73,10 @@ export function KanbanBoard() {
   useEffect(() => {
     useTaskStore.persist.rehydrate();
   }, []);
-  if (!isMounted) return;
+
+  if (!isMounted) {
+    return <KanbanBoardSkeleton />;
+  }
 
   function getDraggingTaskData(taskId: UniqueIdentifier, columnId: ColumnId) {
     const tasksInColumn = tasks.filter((task) => task.status === columnId);
