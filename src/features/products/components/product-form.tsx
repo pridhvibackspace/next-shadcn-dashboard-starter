@@ -25,7 +25,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+/** Maximum allowed file size for product images (5MB) */
 const MAX_FILE_SIZE = 5000000;
+
+/** Accepted image file types for product uploads */
 const ACCEPTED_IMAGE_TYPES = [
   'image/jpeg',
   'image/jpg',
@@ -33,6 +36,10 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp'
 ];
 
+/**
+ * Zod schema for product form validation
+ * Validates all required fields including image upload, name, category, price, and description
+ */
 const formSchema = z.object({
   image: z
     .any()
@@ -55,13 +62,47 @@ const formSchema = z.object({
   })
 });
 
+/**
+ * Props for the ProductForm component
+ */
+interface ProductFormProps {
+  /** Existing product data for editing, or null for creating new product */
+  initialData: Product | null;
+  /** Title to display in the form header */
+  pageTitle: string;
+}
+
+/**
+ * Product form component for creating and editing products
+ * 
+ * Features:
+ * - File upload with image validation and preview
+ * - Form validation using Zod schema
+ * - Support for both create and edit modes
+ * - Category selection dropdown
+ * - Price input with number validation
+ * - Description textarea with minimum length requirement
+ * - Responsive grid layout
+ * - Error handling and form state management
+ * 
+ * @param props - Component props
+ * @param props.initialData - Existing product data for editing, null for new product
+ * @param props.pageTitle - Title displayed in the form header
+ * @returns JSX element representing the product form
+ * 
+ * @example
+ * ```tsx
+ * // Creating a new product
+ * <ProductForm initialData={null} pageTitle="Add New Product" />
+ * 
+ * // Editing existing product
+ * <ProductForm initialData={existingProduct} pageTitle="Edit Product" />
+ * ```
+ */
 export default function ProductForm({
   initialData,
   pageTitle
-}: {
-  initialData: Product | null;
-  pageTitle: string;
-}) {
+}: ProductFormProps) {
   const defaultValues = {
     name: initialData?.name || '',
     category: initialData?.category || '',

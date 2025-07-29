@@ -13,11 +13,52 @@ import {
 import { getCommonPinningStyles } from '@/lib/data-table';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
+/**
+ * Props for the DataTable component
+ * @template TData - The type of data objects in the table
+ */
 interface DataTableProps<TData> extends React.ComponentProps<'div'> {
+  /** The TanStack Table instance containing table state and configuration */
   table: TanstackTable<TData>;
+  /** Optional action bar component displayed when rows are selected */
   actionBar?: React.ReactNode;
 }
 
+/**
+ * A flexible data table component built on TanStack Table
+ * 
+ * Features:
+ * - Responsive design with horizontal scrolling
+ * - Column pinning support with proper styling
+ * - Sticky header for better UX with large datasets
+ * - Integrated pagination controls
+ * - Optional action bar for bulk operations
+ * - Empty state handling
+ * - Accessibility support
+ * 
+ * @template TData - The type of data objects displayed in the table
+ * @param props - Component props
+ * @param props.table - TanStack Table instance with data and configuration
+ * @param props.actionBar - Optional action bar shown when rows are selected
+ * @param props.children - Additional content to render above the table
+ * @returns JSX element representing a fully-featured data table
+ * 
+ * @example
+ * ```tsx
+ * const table = useReactTable({
+ *   data: products,
+ *   columns: productColumns,
+ *   // ... other table config
+ * });
+ * 
+ * <DataTable 
+ *   table={table}
+ *   actionBar={<BulkDeleteButton />}
+ * >
+ *   <DataTableToolbar table={table} />
+ * </DataTable>
+ * ```
+ */
 export function DataTable<TData>({
   table,
   actionBar,

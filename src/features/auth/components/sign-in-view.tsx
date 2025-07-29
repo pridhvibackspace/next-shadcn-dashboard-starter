@@ -6,12 +6,43 @@ import { IconStar } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+/**
+ * Metadata configuration for the sign-in page
+ * Defines the page title and description for SEO and browser display
+ */
 export const metadata: Metadata = {
   title: 'Authentication',
   description: 'Authentication forms built using the components.'
 };
 
-export default function SignInViewPage({ stars }: { stars: number }) {
+/**
+ * Props for the SignInViewPage component
+ */
+interface SignInViewPageProps {
+  /** The number of GitHub stars to display for the repository */
+  stars: number;
+}
+
+/**
+ * Sign-in page component that displays the authentication form with branding
+ * 
+ * Features:
+ * - Two-column layout with branding section and sign-in form
+ * - GitHub repository link with star count display
+ * - Integrated Clerk authentication form
+ * - Responsive design that adapts to different screen sizes
+ * - Terms of service and privacy policy links
+ * 
+ * @param props - Component props
+ * @param props.stars - Number of GitHub stars to display
+ * @returns JSX element representing the complete sign-in page
+ * 
+ * @example
+ * ```tsx
+ * <SignInViewPage stars={1250} />
+ * ```
+ */
+export default function SignInViewPage({ stars }: SignInViewPageProps) {
   return (
     <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <Link

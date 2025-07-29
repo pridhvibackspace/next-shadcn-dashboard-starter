@@ -17,12 +17,42 @@ import { toast } from 'sonner';
 import * as z from 'zod';
 import GithubSignInButton from './github-auth-button';
 
+/**
+ * Zod schema for user authentication form validation
+ * Validates that the email field contains a valid email address
+ */
 const formSchema = z.object({
   email: z.string().email({ message: 'Enter a valid email address' })
 });
 
+/**
+ * Type definition for the user authentication form values
+ * Inferred from the formSchema to ensure type safety
+ */
 type UserFormValue = z.infer<typeof formSchema>;
 
+/**
+ * User authentication form component that provides email and GitHub sign-in options
+ * 
+ * Features:
+ * - Email input with validation using Zod schema
+ * - Form state management with React Hook Form
+ * - Loading states during authentication attempts
+ * - GitHub OAuth authentication option
+ * - Success notifications via toast messages
+ * - Callback URL handling for redirects after authentication
+ * 
+ * @returns JSX element containing the complete authentication form
+ * 
+ * @example
+ * ```tsx
+ * <UserAuthForm />
+ * ```
+ * 
+ * @remarks
+ * This component currently logs authentication attempts to console.
+ * In a production environment, this should be replaced with actual authentication logic.
+ */
 export default function UserAuthForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl');

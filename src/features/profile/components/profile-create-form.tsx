@@ -32,10 +32,46 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 
+/**
+ * Props for the ProfileCreateForm component
+ */
 interface ProfileFormType {
+  /** Initial profile data for editing, or null for creating new profile */
   initialData: any | null;
 }
 
+/**
+ * Multi-step profile creation form component with dynamic job experience fields
+ * 
+ * Features:
+ * - Multi-step wizard interface with progress indicator
+ * - Dynamic job experience fields with add/remove functionality
+ * - Form validation using Zod schema
+ * - Step-by-step validation before proceeding
+ * - Accordion-based job experience sections
+ * - Country and city selection dropdowns
+ * - Form state persistence across steps
+ * - Responsive design for mobile and desktop
+ * - Error handling with visual indicators
+ * 
+ * Steps:
+ * 1. Personal Information (name, email, contact, location)
+ * 2. Professional Information (job experiences)
+ * 3. Completion summary
+ * 
+ * @param props - Component props
+ * @param props.initialData - Existing profile data for editing, null for new profile
+ * @returns JSX element representing the multi-step profile creation form
+ * 
+ * @example
+ * ```tsx
+ * // Creating new profile
+ * <ProfileCreateForm initialData={null} />
+ * 
+ * // Editing existing profile
+ * <ProfileCreateForm initialData={existingProfile} />
+ * ```
+ */
 const ProfileCreateForm: React.FC<ProfileFormType> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
@@ -78,6 +114,11 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({ initialData }) => {
     name: 'jobs'
   });
 
+  /**
+   * Processes the final form submission
+   * 
+   * @param data - The validated form data from all steps
+   */
   const processForm: SubmitHandler<ProfileFormValues> = (data) => {
     // Process form data
     setData(data);
@@ -112,6 +153,10 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({ initialData }) => {
     { id: 'Step 3', name: 'Complete' }
   ];
 
+  /**
+   * Advances to the next step in the form wizard
+   * Validates current step fields before proceeding
+   */
   const next = async () => {
     const fields = steps[currentStep].fields;
 
@@ -130,6 +175,9 @@ const ProfileCreateForm: React.FC<ProfileFormType> = ({ initialData }) => {
     }
   };
 
+  /**
+   * Goes back to the previous step in the form wizard
+   */
   const prev = () => {
     if (currentStep > 0) {
       setPreviousStep(currentStep);
