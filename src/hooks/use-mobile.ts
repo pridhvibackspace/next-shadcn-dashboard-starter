@@ -19,3 +19,24 @@ export function useIsMobile() {
 
   return !!isMobile;
 }
+
+// Alternative hook with different API for backward compatibility
+export function useMediaQuery() {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+    setIsOpen(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => {
+      setIsOpen(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  return { isOpen };
+}
+
+export { MOBILE_BREAKPOINT };
