@@ -56,6 +56,3 @@ export const SignOutButton = ClerkSignOutButton;
 export const SignInForm = ClerkSignIn;
 export const SignUpForm = ClerkSignUp;
 export const UserProfile = ClerkUserProfile;
-
-// Export types for use in components
-export type { AuthUser, AuthContext };
