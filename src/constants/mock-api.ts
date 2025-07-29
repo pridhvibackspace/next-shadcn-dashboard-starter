@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 import { faker } from '@faker-js/faker';
+import { MOCK_PRODUCTS_COUNT } from './ui';
 import { matchSorter } from 'match-sorter'; // For filtering
 
 export const delay = (ms: number) =>
@@ -54,7 +55,7 @@ export const fakeProducts = {
     }
 
     // Generate remaining records
-    for (let i = 1; i <= 20; i++) {
+    for (let i = 1; i <= MOCK_PRODUCTS_COUNT; i++) {
       sampleProducts.push(generateRandomProductData(i));
     }
 
